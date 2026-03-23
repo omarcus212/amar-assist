@@ -25,11 +25,13 @@
     </nav>
 
     <div class="sidebar-footer">
-      <div class="user-profile">
-        <div class="user-avatar">A</div>
+      <div class="user-profile" v-if="user">
+        <div class="user-avatar">
+          {{ user.name ? user.name.charAt(0).toUpperCase() : "?" }}
+        </div>
         <div class="user-info">
-          <p class="user-name">Administrador</p>
-          <p class="user-email">admin@admin.com</p>
+          <p class="user-name">{{ user.name }}</p>
+          <p class="user-email">{{ user.email }}</p>
         </div>
       </div>
       <button class="btn-logout" @click="handleLogout">
@@ -41,6 +43,7 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { authService } from "@/services/auth";
 
@@ -53,6 +56,14 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const user = ref({ name: "", email: "" });
+
+onMounted(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    user.value = JSON.parse(storedUser);
+  }
+});
 
 const handleLogout = async () => {
   await authService.logout();

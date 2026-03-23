@@ -94,7 +94,11 @@
                   <td>{{ formatDate(user.created_at) }}</td>
                   <td>
                     <div class="action-buttons">
-                      <button class="btn-edit" @click="openModal('edit', user)">
+                      <button
+                        v-if="user.active"
+                        class="btn-edit"
+                        @click="openModal('edit', user)"
+                      >
                         Editar
                       </button>
                       <button
